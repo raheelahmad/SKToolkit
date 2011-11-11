@@ -16,9 +16,14 @@ typedef enum {
 
 @interface SKSegmentedControl : UIControl
 
+@property (strong, nonatomic) NSArray *itemTitles;
 @property (strong, nonatomic) NSMutableArray *itemLabels;
 @property (nonatomic) int selectedIndex;
 @property (nonatomic) SKSegItemSeparatorType separatorType;
+@property (nonatomic) int inactiveFontSize;
+@property (nonatomic) int activeFontSize;
+@property (nonatomic, retain) UIColor *activeLabelColor;
+@property (nonatomic, retain) UIColor *inactiveLabelColor;
 
 - (id) initWithFrame:(CGRect)frame andItems: (NSArray *) itms;
 - (void) selectAtIndex: (int) newIndex;

@@ -87,10 +87,10 @@
 	
 	// setup the backingView. This will be where the labels are added and will only take part of the full view's height
 	if (self.heightRatioOfParent <= 0) {
-		// if a 0.45 height ratio gives us managable height, let's use that
-		float proposedHeight = viewFrame.size.height * 0.45f;
+		// if a 0.55 height ratio gives us managable height, let's use that
+		float proposedHeight = viewFrame.size.height * 0.65f;
 		if (proposedHeight >= 80)
-			self.heightRatioOfParent = 0.45f;
+			self.heightRatioOfParent = 0.65f;
 		else {
 			self.heightRatioOfParent = viewFrame.size.height / 80;
 		}
@@ -105,10 +105,10 @@
 	float h = self.parentVC.view.bounds.size.height * self.heightRatioOfParent;
 	labelsViewFrame = CGRectMake(0, viewFrame.size.height - h, viewFrame.size.width, h);
 	hiddenLabelsViewFrame = CGRectOffset(labelsViewFrame, 0, labelsViewFrame.size.height);
+	self.labelsView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"helpBackground.png"]];
 	self.labelsView = [[UIView alloc] initWithFrame:hiddenLabelsViewFrame];
 	self.labelsView.layer.borderColor = [UIColor darkGrayColor].CGColor;
 	self.labelsView.layer.borderWidth = 1.0f;
-	self.labelsView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"helpBackground.png"]];
 	[self.view addSubview:self.labelsView];
 	
 	float xBuffer = labelsViewFrame.size.width/8;

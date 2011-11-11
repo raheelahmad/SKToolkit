@@ -122,7 +122,6 @@
 }
 
 - (BOOL) continueTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
-	[self sendActionsForControlEvents:UIControlEventValueChanged];
 	return YES;
 }
 
@@ -136,6 +135,7 @@
 		indexAtUp = pointAtUp.y / (self.frame.size.height / [itemTitles count]);
 	
 	[self selectAtIndex:indexAtUp];
+	[self sendActionsForControlEvents:UIControlEventValueChanged];
 }
 
 #pragma mark - Helpers

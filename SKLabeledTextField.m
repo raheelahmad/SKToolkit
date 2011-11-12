@@ -11,10 +11,17 @@
 #define MIN_LABEL_WIDTH 80
 #define DISTANCE_BETWEEN_LABEL_FIELD 8
 
+@interface SKLabeledTextField ()
+
+- (void) _initialize;
+
+@end
+
 @implementation SKLabeledTextField
 
 @synthesize labelText;
 @synthesize labelBackgroundColor;
+@synthesize labelTextColor;
 @synthesize labelWidth;
 @synthesize labelFont;
 
@@ -25,8 +32,13 @@
 	[self setNeedsDisplay];
 }
 
-- (void) setLabelBackgroundColor:(CGColorRef) newColor {
+- (void) setLabelBackgroundColor:(UIColor *) newColor {
 	labelBackgroundColor = newColor;
+	[self setNeedsDisplay];
+}
+
+- (void) setLabelTextColor:(UIColor *) newColor {
+	labelTextColor = newColor;
 	[self setNeedsDisplay];
 }
 
@@ -40,16 +52,29 @@
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
-    if (self) {
-		self.labelWidth = MIN_LABEL_WIDTH;
-		labelFont = [UIFont boldSystemFontOfSize:14];
-		self.layer.borderColor = [UIColor grayColor].CGColor;
-		self.layer.borderWidth = 1.0f;
-		self.layer.cornerRadius = 6.0f;
-		self.clipsToBounds = YES;
-		labelBackgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"fieldsBackground.png"]].CGColor;
-    }
+    if (self)
+		[self _initialize];
+		
     return self;
+}
+
+- (id) initWithFrame:(CGRect)frame {
+	self = [super initWithFrame:frame];
+	if (self)
+		[self _initialize];
+	
+	return self;
+}
+
+- (void) _initialize {
+	self.labelWidth = MIN_LABEL_WIDTH;
+	labelFont = [UIFont boldSystemFontOfSize:14];
+	self.layer.borderColor = [UIColor grayColor].CGColor;
+	self.layer.borderWidth = 1.0f;
+	self.layer.cornerRadius = 6.0f;
+	self.clipsToBounds = YES;
+	labelBackgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"fieldsBackground.png"]];
+	labelTextColor = [UIColor darkGrayColor];
 }
 
 - (CGRect)textRectForBounds:(CGRect)bounds {
@@ -65,7 +90,7 @@
 	[super drawRect:rect];
 	// draw the label background
 	CGContextRef context = UIGraphicsGetCurrentContext();
-	CGContextSetFillColorWithColor(context, labelBackgroundColor);
+	CGContextSetFillColorWithColor(context, labelBackgroundColor.CGColor);
 	CGContextFillRect(context, CGRectMake(0, 0, self.labelWidth, self.bounds.size.height));
 	
 	// draw vertical separator line
@@ -79,7 +104,7 @@
 	CGPathRelease(path);
 
 	// draw the label text
-	CGContextSetFillColorWithColor(context, [UIColor darkGrayColor].CGColor);
+	CGContextSetFillColorWithColor(context, self.labelTextColor.CGColor);
 	float stringMaxWidth = self.labelWidth;
 	float stringMaxHeight = self.bounds.size.height;
 	CGSize stringMaxSize = CGSizeMake(stringMaxWidth, stringMaxHeight);

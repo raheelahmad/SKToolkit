@@ -13,11 +13,17 @@
 	CGRect viewFrame;
 	CGRect labelsViewFrame;
 	CGRect hiddenLabelsViewFrame;
+	CGRect titleRect;
+	CGRect messageRect;
+	float heightRatio;
 }
 
 @property (nonatomic, weak) UIViewController *parentVC;
 @property (nonatomic, strong) NSString *messageTitle;
 @property (nonatomic, strong) NSString *helpMessage;
+@property (nonatomic, strong) UIFont *messageFont;
+@property (nonatomic, strong) UIFont *titleFont;
+@property (nonatomic, strong) UIColor *backgroundColor;
 @property (nonatomic) float heightRatioOfParent;
 @property (nonatomic) BOOL showing;
 

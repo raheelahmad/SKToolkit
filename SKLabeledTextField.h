@@ -15,8 +15,12 @@ A labeled text field. You would specify the width for the label, the default bei
 @interface SKLabeledTextField : UITextField {
 	int labelWidth;
 	CGColorRef labelBackgroundColor;
+	UIFont *labelFont;
 }
 
 @property (nonatomic, strong) NSString *labelText;
+@property (nonatomic) CGColorRef labelBackgroundColor;
+@property (nonatomic, strong) UIFont *labelFont;
+@property (nonatomic) int labelWidth;
 
 @end

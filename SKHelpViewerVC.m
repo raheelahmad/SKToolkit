@@ -87,7 +87,12 @@
 #pragma mark - Setters
 
 - (void) setBackgroundColor:(UIColor *) newColor {
+	backgroundColor = newColor;
 	self.labelsView.backgroundColor = newColor;
+}
+
+- (UIColor *) backgroundColor {
+	return backgroundColor;
 }
 
 - (void) setHeightRatioOfParent:(float) newRatio {
@@ -144,7 +149,7 @@
 		viewFrame = parentVC.view.frame;
 		heightRatio = 0.65;
 		messageFont = [UIFont fontWithName:@"Cochin" size:13];
-		titleFont = [UIFont fontWithName:@"GillSans-Bold" size:16];
+		titleFont = [UIFont fontWithName:@"GillSans-Bold" size:20];
     }
     return self;
 }
@@ -168,10 +173,10 @@
 	[transparentView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hide)]];
 	[self.view addSubview:self.transparentView];
 	
+	if (!self.backgroundColor)
+		self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"helpBackground.png"]];
 	self.labelsView = [[UIView alloc] initWithFrame:hiddenLabelsViewFrame];
-	self.labelsView.layer.borderColor = [UIColor darkGrayColor].CGColor;
-	self.labelsView.layer.borderWidth = 1.0f;
-	self.labelsView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"helpBackground.png"]];
+	self.labelsView.backgroundColor = self.backgroundColor;
 	[self.view addSubview:self.labelsView];
 	
 	self.messageWebView = [[UIWebView alloc] initWithFrame:messageRect];

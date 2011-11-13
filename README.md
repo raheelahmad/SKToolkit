@@ -1,5 +1,7 @@
 ## UIKit classes ##
 
+http://rabt.sakunlabs.com/post/12739270322/some-ios-ui-controls
+
 Just filling the gaps. Simple. Useful. Experimental.
 
 1. **SKHelpViewer**: An easy way to add contextual help to your views. Supply a title, and an HTML based help string, along with the view controller in which you want to show the help. It presents itself as partially covering the parent view, and dimming the background. You can customize the fonts, the background color, and the height upto which the parent view is covered.

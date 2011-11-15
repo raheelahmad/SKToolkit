@@ -22,6 +22,7 @@ typedef enum {
 @property (nonatomic) SKSegItemSeparatorType separatorType;
 @property (nonatomic) int inactiveFontSize;
 @property (nonatomic) int activeFontSize;
+@property (nonatomic) int selectionLineThickness;
 @property (nonatomic, retain) UIColor *activeLabelColor;
 @property (nonatomic, retain) UIColor *inactiveLabelColor;
 

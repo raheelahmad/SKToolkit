@@ -21,8 +21,8 @@
 
 - (UIImageView *) separatorAt: (int) xPosition;
 - (CGSize) sizeForString:(NSString *) aString;
-- (void) addShadowToLayer: (CALayer *) aLayer;
-- (void) removeShadowFromLayer: (CALayer *) aLayer;
+- (void) makeLayerSelected: (CATextLayer *) aLayer;
+- (void) makeLayerUnselected: (CATextLayer *) aLayer;
 - (BOOL) horizontalOrientation;
 - (void) setupLabels;
 - (void) setupSeparators;
@@ -47,6 +47,7 @@
 @synthesize activeFontSize;
 @synthesize activeLabelColor;
 @synthesize inactiveLabelColor;
+@synthesize selectionLineThickness;
 
 #pragma mark - Event handlers
 
@@ -72,18 +73,18 @@
 		
 		if ([self horizontalOrientation]) {
 			newFrame = CGRectMake(newIndex * w, h/2 - txtHeight/2, w, txtHeight);
-			lineViewFrame = CGRectMake(newIndex * w + w/2 - stringSize.width/2, h/2 + txtHeight/2 - 6, stringSize.width, 6);
+			lineViewFrame = CGRectMake(newIndex * w + w/2 - stringSize.width/2, h/2 + txtHeight/2, stringSize.width, self.selectionLineThickness);
 		}
 		else {
 			newFrame = CGRectMake(0, h * newIndex + txtHeight/2, w, txtHeight);
-			lineViewFrame = CGRectMake(w - stringSize.width, h * (newIndex+1) - h/2 + txtHeight/2 - 6, stringSize.width, 6);
+			lineViewFrame = CGRectMake(w - stringSize.width, h * (newIndex+1) - h/2 + txtHeight/2, stringSize.width, self.selectionLineThickness);
 		}
 				
 		// set up line view if not available
 		
 		if (!self.selectionLineView) {
 			self.selectionLineView = [[SSLineView alloc] initWithFrame:lineViewFrame];
-			self.selectionLineView.lineColor = [UIColor blackColor];
+			self.selectionLineView.lineColor = self.activeLabelColor;
 			self.selectionLineView.insetColor = [UIColor colorWithRed:0.474 green:0.567 blue:0.894 alpha:1.000];
 			[self.selectionLineView setShowInset:YES];
 		}
@@ -93,10 +94,7 @@
 		// animate the selection
 		[UIView animateWithDuration:0.3f delay:0.0f options:(UIViewAnimationOptionCurveEaseInOut) animations:^{
 			newSelectedLayer.frame = newFrame;
-			newSelectedLayer.font = self.ctLargeFont;
-			newSelectedLayer.foregroundColor = self.activeLabelColor.CGColor;
-			[self addShadowToLayer:newSelectedLayer];
-			newSelectedLayer.fontSize = self.activeFontSize;
+			[self makeLayerSelected:newSelectedLayer];
 			
 			self.selectionLineView.frame = lineViewFrame;
 		} completion:^(BOOL finished) {
@@ -106,10 +104,7 @@
 		// if there was a previous selectedIndex, let's make it unselected
 		if (newIndex != selectedIndex && selectedIndex >= 0 && selectedIndex < [itemTitles count]) {
 			CATextLayer *oldSelectedLayer = [itemLabels objectAtIndex:selectedIndex];
-			oldSelectedLayer.font = self.ctSmallFont;
-			oldSelectedLayer.fontSize = self.inactiveFontSize;
-			oldSelectedLayer.foregroundColor = self.inactiveLabelColor.CGColor;
-			[self removeShadowFromLayer:oldSelectedLayer];
+			[self makeLayerUnselected:oldSelectedLayer];
 		}
 		selectedIndex = newIndex;
 	}
@@ -160,16 +155,24 @@
 	return imgVw;
 }
 
-- (void) addShadowToLayer: (CALayer *) aLayer {
+- (void) makeLayerSelected:(CATextLayer *)aLayer {
 	aLayer.shadowColor = [UIColor colorWithWhite:0.2f alpha:0.7f].CGColor;
 	aLayer.shadowOffset = CGSizeMake(0, 1);
 	aLayer.shadowOpacity = 1.0f;
-	aLayer.shadowRadius = 2.0f;
+	aLayer.fontSize = self.activeFontSize;
+	aLayer.font = self.ctLargeFont;
+	aLayer.foregroundColor = self.activeLabelColor.CGColor;
+	aLayer.shadowRadius = 1.0f;
 }
 
-- (void) removeShadowFromLayer: (CALayer *) aLayer {
-	aLayer.shadowOpacity = 0.0f;
-	aLayer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+- (void) makeLayerUnselected:(CATextLayer *)aLayer {
+	aLayer.shadowOpacity = 1.0f;
+	aLayer.shadowOffset = CGSizeMake(0.0f, 1.0f);
+	aLayer.shadowColor = [UIColor colorWithWhite:0.9f alpha:1.0f].CGColor;
+	aLayer.shadowRadius = 0.0f;
+	aLayer.font = self.ctSmallFont;
+	aLayer.fontSize = self.inactiveFontSize;
+	aLayer.foregroundColor = self.inactiveLabelColor.CGColor;
 }
 
 
@@ -239,7 +242,7 @@
 			[alayer setAlignmentMode:kCAAlignmentCenter];
 		else
 			[alayer setAlignmentMode:kCAAlignmentRight];
-		[self removeShadowFromLayer:alayer];
+		[self makeLayerUnselected:alayer];
 		[[self layer] addSublayer:alayer];
 		[itemLabels addObject:alayer];
 	}
@@ -271,6 +274,11 @@
 }
 
 #pragma mark - Setters
+
+- (void) setSelectionLineThickness:(int) newThickness {
+	selectionLineThickness = newThickness;
+	[self selectAtIndex:selectedIndex];
+}
 
 - (void) setInactiveFontSize:(int) aSize {
 	inactiveFontSize = aSize;
@@ -323,7 +331,8 @@
 	if (self) {
 		self.activeFontSize = 18; // default font sizes
 		self.inactiveFontSize = 17;
-		self.activeLabelColor = [UIColor blackColor];
+		self.selectionLineThickness = 6;
+		self.activeLabelColor = [UIColor colorWithWhite:0.254 alpha:1.000];
 		self.inactiveLabelColor = [UIColor grayColor];
 		
 		self.backgroundColor = [UIColor clearColor];

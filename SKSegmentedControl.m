@@ -72,11 +72,11 @@
 		
 		if ([self horizontalOrientation]) {
 			newFrame = CGRectMake(newIndex * w, h/2 - txtHeight/2, w, txtHeight);
-			lineViewFrame = CGRectMake(newIndex * w + w/2 - stringSize.width/2, h - 6, stringSize.width, 6);
+			lineViewFrame = CGRectMake(newIndex * w + w/2 - stringSize.width/2, h/2 + txtHeight/2 - 6, stringSize.width, 6);
 		}
 		else {
 			newFrame = CGRectMake(0, h * newIndex + txtHeight/2, w, txtHeight);
-			lineViewFrame = CGRectMake(w - stringSize.width, h * (newIndex + 1) - 6, stringSize.width, 6);
+			lineViewFrame = CGRectMake(w - stringSize.width, h * (newIndex+1) - h/2 + txtHeight/2 - 6, stringSize.width, 6);
 		}
 				
 		// set up line view if not available

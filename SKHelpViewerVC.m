@@ -150,6 +150,8 @@
 		heightRatio = 0.65;
 		messageFont = [UIFont fontWithName:@"Cochin" size:13];
 		titleFont = [UIFont fontWithName:@"GillSans-Bold" size:20];
+		
+		[self setupViewFrames];
     }
     return self;
 }
